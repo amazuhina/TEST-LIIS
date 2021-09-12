@@ -1,21 +1,48 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {View} from 'react-native';
+import styled from 'styled-components'
+import {Provider, useSelector} from "react-redux";
+import {store} from "./redux/store";
+import { NavigationContainer } from '@react-navigation/native';
+import {Navigate} from "./navigate";
+import {isDarkSelector} from "./slices/theme-slice";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+const AppStl = styled(View)<{isDarkTheme: boolean}>`
+  flex: 1;  
+  padding: 20px;
+  margin-top: 50px;
+  justify-content: space-between; 
+  color: #333;
+  
+  
+  ${({isDarkTheme}) => isDarkTheme && `
+      background-color: #333;  
+      color: #fff;
+  `}
+`
+
+const AppContent = () => {
+
+    const isDarkTheme = useSelector(isDarkSelector)
+
+
+    return (
+        <AppStl isDarkTheme={isDarkTheme}>
+            <NavigationContainer>
+                <Navigate/>
+            </NavigationContainer>
+        </AppStl>
+    )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const App = () => {
+    return (
+        <Provider store={store}>
+            <AppContent />
+        </Provider>
+    )
+}
+
+
+export default App
